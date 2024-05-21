@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import Spinner from "./elements/Spinner";
 import { AiOutlineEdit } from "react-icons/ai";
 import { MdOutlineAddBox, MdOutlineDelete } from "react-icons/md";
-import { FaEye, FaSearch } from "react-icons/fa";
+import { FaEye } from "react-icons/fa";
 import SearchBar from "./SearchBar";
 
 const Home = () => {
@@ -12,7 +12,7 @@ const Home = () => {
   const [loading, setLoading] = useState(false);
   const [showDeletePopup, setShowDeletePopup] = useState(false);
   const [selectedBookId, setSelectedBookId] = useState(null);
-  const [searchValue, setSearchValue] = useState("")
+  const [searchValue, setSearchValue] = useState("");
 
   useEffect(() => {
     setLoading(true);
@@ -59,36 +59,24 @@ const Home = () => {
     setSelectedBookId(null);
   };
 
-  const handleSearch = () => {
-    
-    const SearchRes = books.filter(book => {
-      if (
-        book.title.toLowerCase().includes(searchValue.toLocaleLowerCase()) || 
-        book.title.toUpperCase().includes(searchValue.toLocaleUpperCase())
-      ) {
-        return book
-      }
-      
-      console.log(SearchRes);
-      return SearchRes;
-  });
-};
+  const handleSearch = (e) => {
+    setSearchValue(e.target.value.toLowerCase());
+  };
+
+  const filteredBooks = books.filter(
+    (book) =>
+      book.title.toLowerCase().includes(searchValue) ||
+      book.author.toLowerCase().includes(searchValue)
+  );
 
   return (
-    <div className="p-4">
+    <div className='p-4'>
       <div className='flex justify-between items-center py-4'>
-        <h1 className="text-3xl">BOOK LIST</h1>
-        {/* <SearchBar /> */}
-        <div className="flex">
+        <h1 className='text-3xl'>BOOK LIST</h1>
 
-        <input type="text" 
-        className="bg-amber-500 p-4 text-black border-red-300 border-l-2 rounded-full" 
-        placeholder="Search..."
-        value={searchValue}
-        onChange={(e)=> setSearchValue(e.target.value)}
-        />
-        <FaSearch onClick={handleSearch} className="text-6xl cursor-pointer"/>
-        </div>
+        {/* Search bar */}
+        <SearchBar searchValue={searchValue} handleSearch={handleSearch} />
+
         <Link to='/books/create'>
           <MdOutlineAddBox className='text-green-700 text-4xl' />
         </Link>
@@ -96,48 +84,46 @@ const Home = () => {
       {loading ? (
         <Spinner />
       ) : (
-        <table className="w-full border-separate border-spacing-0">
+        <table className='w-full border-separate border-spacing-0'>
           <thead>
             <tr>
-              <th className="border border-slate-600 rounded-md">No.</th>
-              <th className="border border-slate-600 rounded-md">Title</th>
-              <th className="border border-slate-600 rounded-md max-md:hidden">
+              <th className='border border-slate-600 rounded-md'>No.</th>
+              <th className='border border-slate-600 rounded-md'>Title</th>
+              <th className='border border-slate-600 rounded-md max-md:hidden'>
                 Author
               </th>
-              <th className="border border-slate-600 rounded-md max-md:hidden">
+              <th className='border border-slate-600 rounded-md max-md:hidden'>
                 Published year
               </th>
-              <th className="border border-slate-600 rounded-md">
-                Operations
-              </th>
+              <th className='border border-slate-600 rounded-md'>Operations</th>
             </tr>
           </thead>
           <tbody>
-            {books.map((book, index) => (
-              <tr key={book._id} className="h-8">
-                <td className="border border-slate-700 rounded-md text-center">
+            {filteredBooks.map((book, index) => (
+              <tr key={book._id} className='h-8'>
+                <td className='border border-slate-700 rounded-md text-center'>
                   {index + 1}
                 </td>
-                <td className="border border-slate-700 rounded-md text-center">
+                <td className='border border-slate-700 rounded-md text-center'>
                   {book.title}
                 </td>
-                <td className="border border-slate-700 rounded-md text-center max-md:hidden">
+                <td className='border border-slate-700 rounded-md text-center max-md:hidden'>
                   {book.author}
                 </td>
-                <td className="border border-slate-700 rounded-md text-center max-md:hidden">
+                <td className='border border-slate-700 rounded-md text-center max-md:hidden'>
                   {book.publishedYear}
                 </td>
-                <td className="border border-slate-700 rounded-md text-center">
-                  <div className="flex justify-center md:gap-x-12 gap-x-2">
+                <td className='border border-slate-700 rounded-md text-center'>
+                  <div className='flex justify-center md:gap-x-12 gap-x-2'>
                     <Link to={`/books/details/${book._id}`}>
-                      <FaEye className="text-2xl text-green-800" />
+                      <FaEye className='text-2xl text-green-800' />
                     </Link>
                     <Link to={`/books/edit/${book._id}`}>
-                      <AiOutlineEdit className="text-2xl text-orange-800" />
+                      <AiOutlineEdit className='text-2xl text-orange-800' />
                     </Link>
                     <button
                       onClick={() => handleDelete(book._id)}
-                      className="text-2xl text-red-800"
+                      className='text-2xl text-red-800'
                     >
                       <MdOutlineDelete />
                     </button>
@@ -149,28 +135,30 @@ const Home = () => {
         </table>
       )}
       {showDeletePopup && (
-        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center z-10">
-          <div className="bg-white p-8 rounded-lg">
-            <h2 className="text-2xl mb-4">Confirm Delete</h2>
-            <p className="mb-4">
-              Are you sure you want to delete this book?
-            </p>
-            <div className="flex justify-center">
+        <div className='fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center z-10'>
+          <div className='bg-white p-8 rounded-lg'>
+            <h2 className='text-2xl mb-4'>Confirm Delete</h2>
+            <p className='mb-4'>Are you sure you want to delete this book?</p>
+            <div className='flex justify-center'>
               <button
                 onClick={handleConfirmDelete}
-                className="bg-red-600 text-white px-4 py-2 rounded mr-4"
+                className='bg-red-600 text-white px-4 py-2 rounded mr-4'
               >
                 Yes
               </button>
               <button
                 onClick={handleCancelDelete}
-                className="bg-green-600 text-white px-4 py-2 rounded"
+                className='bg-green-600 text-white px-4 py-2 rounded'
               >
                 No
               </button>
             </div>
           </div>
-          <div className="w-screen h-screen absolute -z-10 popup-overlay backdrop-blur-[1px]" onClick={handleCancelDelete}></div> OverLay to remove popup
+          <div
+            className='w-screen h-screen absolute -z-10 popup-overlay backdrop-blur-[1px]'
+            onClick={handleCancelDelete}
+          ></div>{" "}
+          OverLay to remove popup
         </div>
       )}
     </div>
