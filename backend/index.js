@@ -2,12 +2,13 @@ const express = require("express");
 const mongoose = require("mongoose");
 const PORT = 3005;
 
-const bookRouter = require('./routes/book.route.js')
+const productRouter = require('./routes/product.route.js')
+const userRouter = require('./routes/user.route.js');
 const cors = require('cors');
 
 const app = express();
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 // app.use(cors({
@@ -20,15 +21,15 @@ app.get("/", (req, res) => {
   res.send("Hello backend");
 });
 
-app.use('/api/book', bookRouter);
-
+app.use('/api/product', productRouter);
+app.use('/api/product/auth', userRouter);
 
 app.listen(PORT, (req, res) => {
     console.log(`listening on port ${PORT}`);
   });
 
   mongoose.connect("mongodb+srv://mishakmanuel:mydatabase4mongo@cluster0.zcwmmue.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0").then(()=>{
-    console.log("Database is Connectido successfully!");
+    console.log("Mongodb Connected!");
 }).catch(()=>{
-    console.log("Failed to connect");
+    console.log("Failed to connect!");
 });

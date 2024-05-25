@@ -1,20 +1,20 @@
-import React, { useEffect, useState } from "react";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import BackButton from "./elements/BackButton";
 import Spinner from "./elements/Spinner";
 
-const ShowBooks = () => {
-  const [book, setBook] = useState({});
+const ShowProducts = () => {
+  const [product, setProduct] = useState({});
   const [loading, setLoading] = useState(false);
   const { id } = useParams();
 
   useEffect(() => {
     setLoading(true);
     axios
-      .get(`http://localhost:3005/api/book/${id}`)
+      .get(`http://localhost:3005/api/product/${id}`)
       .then((res) => {
-        setBook(res.data);
+        setProduct(res.data);
         setLoading(false);
       })
       .catch((error) => {
@@ -32,24 +32,24 @@ const ShowBooks = () => {
         <div className='flex justify-center p-12'>
           <div className='p-4 px-12 border border-3 border-amber-700 shadow-black isolate aspect-video w-96 rounded-xl bg-white/20 shadow-lg ring-1 ring-black/5'>
             <h1 className='mt-2 text-gray-800 text-lg lg:text-2xl font-bold'>
-              <span className="text-amber-800 ">Title: </span>{book.title}
+              <span className="text-amber-800 ">Title: </span>{product.title}
             </h1>
             <img
               className='my-4 border-white border-4'
-              src={book.image}
-              alt={book.title}
+              src={product.image}
+              alt={product.title}
             />
             <h1 className=' text-lg font-bold text-gray-800'>
             <span className="text-amber-800">Author: </span>
-              {book.author}
+              {product.author}
             
             </h1>
             <h1 className='text-gray-800 text-lg  font-bold'>
             <span className="text-amber-800">Published in: </span>
-             {book.publishedYear}</h1>
+             {product.publishedYear}</h1>
             <h1 className='text-gray-800 text-lg font-bold'> 
             <span className="text-amber-800">Created at: </span>
-             {new Date(book.createdAt).toString()}</h1>
+             {new Date(product.createdAt).toString()}</h1>
              <div> 
               <h1 className='text-gray-800 text-lg  font-bold'>Description: </h1>
               <p className="text-balance text-justify">
@@ -62,4 +62,4 @@ const ShowBooks = () => {
   );
 };
 
-export default ShowBooks;
+export default ShowProducts;

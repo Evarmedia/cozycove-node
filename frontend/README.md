@@ -2,9 +2,13 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 ## Dependencies
+
 npm install axios
 npm install --save react-toastify
-npm install --save react-toastify
+npm install react-router-dom
+npm install react-icons
+npm install @mui/material @emotion/react @emotion/styled
+npm install @mui/icons-material
 
 ## Available Scripts
 
