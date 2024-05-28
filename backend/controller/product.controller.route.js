@@ -9,6 +9,12 @@ const createProduct = async (req, res) => {
             .json({ message: "Please enter all required fields" });
         }
 
+        // Quick check to see if Product already exists
+        const existingProduct = await Product.findOne({title})
+
+        if(existingProduct){
+          return res.json({message: "Item already exists, please Edit"})
+        }
         const product = await Product.create(req.body);
         res.status(200).json(product);
       } catch (error) {
@@ -20,7 +26,14 @@ const createProduct = async (req, res) => {
 
 const getProducts = async (req, res) => {
     try {
-        const products = await Product.find({});
+
+       // Check if _limit query parameter is provided
+       const limit = req.query._limit ? parseInt(req.query._limit) : null;
+
+       // Fetch products with or without limit based on the presence of _limit in the url
+       const products = limit ? await Product.find({}).limit(limit) : await Product.find({});
+
+        // const products = await Product.find({});
         res.status(200).json({
           count: products.length,
           data: products,
@@ -71,6 +84,8 @@ const deleteProduct = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 }
+
+
 
 module.exports = {
     createProduct,

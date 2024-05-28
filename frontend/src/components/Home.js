@@ -92,7 +92,7 @@ const Home = () => {
         <div className='fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center z-10'>
           <div className='bg-white p-8 rounded-lg'>
             <h2 className='text-2xl mb-4'>Delete Product</h2>
-            <p className='mb-4'>Are you sure you want to delete this Item?</p>
+            <p className='mb-4'>Are you sure you want to delete this product?</p>
             <div className='flex justify-center'>
               <button
                 onClick={handleConfirmDelete}
