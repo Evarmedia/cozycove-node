@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 import ProductsTable from "./ProductsTable";
 import SearchBar from "./SearchBar";
 import Spinner from "./elements/Spinner";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 const Home = () => {
@@ -36,16 +38,19 @@ const Home = () => {
 
   const handleConfirmDelete = () => {
     axios
-      .delete(`http://localhost:3005/api/product/${selectedProductId}`)
+      .delete(`http://localhost:3005/api/product/deleteproduct/${selectedProductId}`)
       .then((res) => {
-        console.log(res.data.message);
+        // console.log(res.data.message);
         setShowDeletePopup(false);
+
+        toast.warning(res.data.message);
         // Refresh Products list
         axios
           .get("http://localhost:3005/api/product")
           .then((res) => {
             // console.log(res.data.data)
             setProducts(res.data.data);
+            
           })
           .catch((error) => {
             console.log(error);
@@ -72,7 +77,7 @@ const Home = () => {
   return (
     <div className='p-4'>
       <div className='flex justify-between items-center py-4'>
-        <h1 className='text-3xl'>PRODUCTS</h1>
+        <h1 className='text-3xl'>PRODUCT LIST</h1>
 
         {/************* Search bar *****************/}
         <SearchBar searchValue={searchValue} handleSearch={handleSearch} />
@@ -115,6 +120,7 @@ const Home = () => {
         </div>
         // NOTE: Seperate the delete Pop to a modal component later
       )}
+      <ToastContainer />
     </div>
   );
 };

@@ -10,7 +10,6 @@ const cartSchema = new mongoose.Schema({
     },
     date: {
         type: Date,
-        required: true
     },
     products: [
         {

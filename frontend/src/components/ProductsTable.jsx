@@ -41,18 +41,18 @@ const ProductsTable = ({filteredProducts, handleDelete}) => {
               <Link to={`/products/details/${product._id}`}>
 
                 {/* <FaEye className='text-2xl text-green-800' /> */}
-                <button className='flex gap-1 p-1 text-xs text-white rounded-md bg-green-700 hover:scale-110 hover:bg-green-900' title="Click to View Product">
+                <button className='flex justify-center items-center gap-1 py-1 px-2 text-xs text-white rounded-md bg-green-700 hover:scale-110 hover:bg-green-900' title="Click to View Product">
                 <FaEye className='text-xs text-black' />View</button>
 
               </Link>
               <Link to={`/products/edit/${product._id}`}>
                 
-                <button className='flex gap-1 p-1 text-xs text-white rounded-md bg-orange-700 hover:scale-110 hover:bg-orange-900' title="Click to Edit Product">
+                <button className='flex justify-center items-center  gap-1 py-1 px-2 text-xs text-white rounded-md bg-fuchsia-600 hover:scale-110 hover:bg-fuchsia-900' title="Click to Edit Product">
                 <AiOutlineEdit className='text-xs text-black' />Edit</button>
               </Link>
               <button
                 onClick={() => handleDelete(product._id)}
-                className='bg-red-800 hover:scale-110 hover:bg-red-600 rounded-md p-1'
+                className='bg-red-800 hover:scale-110 hover:bg-red-600 rounded-md p-1' title="Delete Product??"
               >
                 <MdOutlineDelete className='text-lg text-white' />
               </button>

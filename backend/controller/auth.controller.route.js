@@ -2,7 +2,9 @@ const UserMod = require("../models/UserModel.js");
 
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const secret = 'a@@R@!F!##31f318ha3rr8301' //Temporary token, do not do this in production
+const secret = 'mySecretKeyForJWTSigning' //Temporary token, do not do this in production
+
+
 
 
 // manage singin
@@ -73,14 +75,20 @@ const signin = async (req, res) => {
       return res.status(401).json({ message: "Invalid Email or Password." });
     }
 
-    const payload = {userId: user._id}
+    //the payload is the id of the user
+    const payload = {userId: user._id} 
+    
+    //extracted users name for aestetics haha
+    const name = user.firstname 
 
-
-    const token = jwt.sign(payload, secret, {expiresIn: '1h'});
+    // cooks the id + secretkey + expiration to form the token
+    const token = jwt.sign(payload, secret, {expiresIn: '5h'}); 
 
     res.json({
-      message: `You are loged in as ${email}`,
-      token: token
+      message: `You are loged in as ${name}`, //the Aestetic*
+      token: token,
+      userId: user._id, // pass the userId to the frontend in response body
+      name //passed the name also incase i need it for a welcome message later.
   })
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -93,6 +101,23 @@ const showAllUsers = async (req, res) => {
     const allUsers = await UserMod.find({});
     res.status(200).json(allUsers);
   } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const showUserById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const Singleuser = await UserMod.findById(id);
+    if(!Singleuser) {
+      res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json(Singleuser);
+
+  } catch (error) {
+    console.log(error);
     res.status(500).json({ message: error.message });
   }
 };
@@ -119,7 +144,16 @@ const deleteUser = async (req, res) => {
 };
 
 // manage signOut action
-const signout = async (req, res) => {};
+// const signout = async (req, res) => {
+//   req.session.destroy((err) => {
+//     if (err) {
+//       return res.status(500).send({ error: 'Failed to sign out' });
+//     }
+//     res.clearCookie('connect.sid'); // Replace 'connect.sid' with your session cookie name
+//     res.status(200).send({ message: 'Signed out successfully' });
+//   });
+
+// };
 
 // const forgotpassword = async (req, res) => {}
 // const verifyemail = async (req, res) => {}
@@ -129,4 +163,6 @@ module.exports = {
   signup,
   showAllUsers,
   deleteUser,
+  showUserById,
+  // signout,
 };

@@ -6,6 +6,8 @@ const {
     signup,
     showAllUsers,
     deleteUser,
+    showUserById,
+    // signout,
 } = require('../controller/auth.controller.route.js');
 
 
@@ -16,6 +18,10 @@ router.post('/login', signin)
 router.get('/showusers', showAllUsers);
 
 router.delete('/deleteuser/:id', deleteUser);
+
+router.get('/showuser/:id', showUserById);
+
+// router.post('/signout', signout);
 
 
 
