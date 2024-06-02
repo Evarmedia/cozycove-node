@@ -21,6 +21,8 @@ const CreateProducts = () => {
   const handleSaveBook = () => {
     // if (!title || !author || !publishedYear) {
     // }
+
+    const token = localStorage.getItem('token');
     const data = {
       title,
       quantity,
@@ -32,7 +34,13 @@ const CreateProducts = () => {
     };
     // setLoading(true);
     axios
-      .post("http://localhost:3005/api/product", data)
+      .post("http://localhost:3005/api/product", data, 
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      }
+      )
       .then(() => {
         setLoading(false);
         toast.success("Product Added Successfully");

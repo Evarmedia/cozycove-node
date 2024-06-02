@@ -36,6 +36,8 @@ const EditProducts = () => {
   }, [id]);
 
   const handleEditBook = () => {
+    const token = localStorage.getItem('token');
+    
     const updatedProduct = {
       title: title || editedProduct.title,
       quantity: quantity || editedProduct.quantity,
@@ -47,7 +49,11 @@ const EditProducts = () => {
 
     setLoading(true);
 
-    axios.put(`http://localhost:3005/api/product/${id}`, updatedProduct )
+    axios.put(`http://localhost:3005/api/product/${id}`, updatedProduct, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    } )
       .then((res) => {
         setLoading(false);
         // toast.success("Product Updated Successfully");

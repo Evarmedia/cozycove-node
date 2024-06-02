@@ -45,17 +45,19 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate("");
 
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    const data = {
-      email,
-      password,
-    };
+    const data = { email, password };
+
     axios
-      .post("http://localhost:3005/api/product/auth/login", data)
+      .post("http://localhost:3005/api/auth/login", data)
       .then((res) => {
         // console.log(data);
         // console.log(res.data);
+        localStorage.setItem("token", res.data.token);
+        localStorage.setItem("userId", res.data.userId);
+
         toast.success(res.data.message);
         setTimeout(() => {
           navigate("/home");

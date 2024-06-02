@@ -37,7 +37,7 @@ const ProductsTable = ({filteredProducts, handleDelete}) => {
             {product.price}
           </td>
           <td className='border border-slate-700 rounded-md text-center'>
-            <div className='flex justify-center md:gap-x-12 gap-x-2'>
+            <div className='flex justify-center md:gap-x-5 gap-x-2 md:px-2'>
               <Link to={`/products/details/${product._id}`}>
 
                 {/* <FaEye className='text-2xl text-green-800' /> */}
@@ -55,6 +55,7 @@ const ProductsTable = ({filteredProducts, handleDelete}) => {
                 className='bg-red-800 hover:scale-110 hover:bg-red-600 rounded-md p-1' title="Delete Product??"
               >
                 <MdOutlineDelete className='text-lg text-white' />
+                
               </button>
             </div>
           </td>

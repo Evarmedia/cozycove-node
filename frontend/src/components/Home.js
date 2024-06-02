@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { MdOutlineAddBox } from "react-icons/md";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ProductsTable from "./ProductsTable";
 import SearchBar from "./SearchBar";
 import Spinner from "./elements/Spinner";
@@ -15,6 +15,21 @@ const Home = () => {
   const [showDeletePopup, setShowDeletePopup] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState(null);
   const [searchValue, setSearchValue] = useState("");
+  const navigate = useNavigate();
+
+  const token = localStorage.getItem('token');
+
+
+  const handleLogout = () => {
+    try {
+      localStorage.removeItem("token");
+      localStorage.removeItem("userId");
+      navigate("/login");
+    } catch (error) {
+      console.error("Logout failed", error);
+    }
+  };
+
 
   useEffect(() => {
     setLoading(true);
@@ -38,7 +53,11 @@ const Home = () => {
 
   const handleConfirmDelete = () => {
     axios
-      .delete(`http://localhost:3005/api/product/deleteproduct/${selectedProductId}`)
+      .delete(`http://localhost:3005/api/product/deleteproduct/${selectedProductId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
       .then((res) => {
         // console.log(res.data.message);
         setShowDeletePopup(false);
@@ -82,9 +101,14 @@ const Home = () => {
         {/************* Search bar *****************/}
         <SearchBar searchValue={searchValue} handleSearch={handleSearch} />
 
+        <div className="flex justify-between gap-4">
+        <button className='bg-red-800 hover:scale-110 text-white font-semibold hover:bg-red-600 rounded-full px-2' title="Delete Product??" 
+        onClick={handleLogout}
+        > Logout</button>
         <Link to='/products/create'>
-          <MdOutlineAddBox className='text-green-700 text-4xl' />
+          <MdOutlineAddBox className='text-green-700 text-4xl hover:scale-110' />
         </Link>
+        </div>
       </div>
       {loading ? (
         <>
