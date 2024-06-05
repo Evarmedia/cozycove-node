@@ -82,7 +82,7 @@ const signin = async (req, res) => {
     const name = user.firstname 
 
     // cooks the id + secretkey + expiration to form the token
-    const token = jwt.sign(payload, secret, {expiresIn: '5h'}); 
+    const token = jwt.sign(payload, secret, {expiresIn: '1h'}); 
 
     res.json({
       message: `You are loged in as ${name}`, //the Aestetic*

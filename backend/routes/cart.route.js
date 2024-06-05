@@ -5,7 +5,7 @@ const {
   getSingleCart,
   addCreateCart,
   addToCart,
-  // deleteCart,
+  deleteCart,
   updateCartProductQuantity,
   deleteProductFromCart,
   clearCart
@@ -21,9 +21,10 @@ router.put('/addtocart/:userId/:productId', addToCart);
 router.get('/getcart', getAllCarts);
 
 // Route to get a single cart by cart ID
-router.get('/getcart/:id', getSingleCart);
+router.get('/getcart/:cartId', getSingleCart);
 
 // Route to update item quantity in a cart *might not be necessary later*
+// /updateqty/
 router.put('/updateqty/:userId', updateCartProductQuantity);
 
 //Route to delete product from cart
@@ -32,7 +33,7 @@ router.delete('/delete/:userId/:productId', deleteProductFromCart);
 // remove all products from cart
 router.delete('/clearcart/:userId', clearCart);
 
-// Route to delete a cart
-// router.delete('/deletecart/:id', deleteCart);
+// Route to delete a cart use cartid
+router.delete('/deletecart/:id', deleteCart);
 
 module.exports = router;
