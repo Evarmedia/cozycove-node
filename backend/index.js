@@ -1,14 +1,16 @@
+require('dotenv').config();
 const express = require("express");
 const mongoose = require("mongoose");
-const PORT = 3005;
+const PORT = process.env.PORT || 3005;
 
+//Routes
 const productRouter = require('./routes/product.route.js')
 const userRouter = require('./routes/auth.route.js');
 const cartRouter = require('./routes/cart.route.js');
 
 
-const cors = require('cors');
 const authMiddleware = require('./middleware/authMiddleware.js');
+const cors = require('cors');
 
 
 const app = express();
@@ -30,17 +32,17 @@ app.get("/", (req, res) => {
 
 
 //private route
-app.use('/api/auth', userRouter);
+app.use(process.env.AUTH_URL, userRouter);
 
 // Prvate route
-app.use('/api/product', productRouter);
-app.use('/api', authMiddleware, cartRouter);
+app.use(process.env.PRODUCT_URL, productRouter);
+app.use(process.env.CART_URL, authMiddleware, cartRouter);
 
 app.listen(PORT, (req, res) => {
     console.log(`listening on port ${PORT}`);
   });
 
-  mongoose.connect("mongodb+srv://mishakmanuel:mydatabase4mongo@cluster0.zcwmmue.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0").then(()=>{
+  mongoose.connect(process.env.MONGODB_URL).then(()=>{
     console.log("Mongodb Connected!");
 }).catch(()=>{
     console.log("Failed to connect!");

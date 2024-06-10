@@ -15,7 +15,7 @@ npm install multer --save
 npm install dotenv --save
 
 npm install body-parser
-
+npm install multer
 
 
 -- CORS --

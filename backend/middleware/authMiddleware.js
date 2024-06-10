@@ -10,8 +10,10 @@ const authMiddleware = (req, res, next) => {
   const token = authHeader.split(' ')[1]; // Bearer <token>
 
   try {
-    const decoded = jwt.verify(token, 'mySecretKeyForJWTSigning');
+    const decoded = jwt.verify(token, process.env.SECRET_KEY);
     req.user = decoded;
+    // const userId = {id: decoded.id}
+    // consle.log(userId);
     next();
   } catch (error) {
     res.status(400).send({ error: 'Invalid token.' });

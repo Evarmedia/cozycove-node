@@ -1,8 +1,13 @@
 const UserMod = require("../models/UserModel.js");
 
+
+require('dotenv').config();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const secret = 'mySecretKeyForJWTSigning' //Temporary token, do not do this in production
+
+
+
+const secret = process.env.SECRET_KEY //Temporary token, do not do this in production
 
 
 

@@ -1,26 +1,6 @@
 const mongoose = require("mongoose");
 const Cart = require("../models/cartModel.js");
 
-// creates a new cart or returns existing based on userId ---confirmed -to be used
-///create_getcart/:userId
-// const addCreateCart = async (req, res) => {
-//   try {
-//     const { userId } = req.params;
-
-//     const existingCart = await Cart.findOne({userId});
-
-//     if (existingCart) {
-//       return res.status(200).json(existingCart);
-//     }
-
-//     const cart = new Cart({ userId, date: new Date().toISOString(), products: [] });
-//     await cart.save();
-//     res.status(200).json(cart);
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).json({ error: 'Internal server error' });
-//   }
-// };
 
 const addCreateCart = async (req, res) => {
   try {
