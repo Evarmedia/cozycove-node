@@ -15,11 +15,20 @@ const ProductSchema = mongoose.Schema(
       require: true,
     },
     
-    description: String,
+    description: {
+      type: String, // Expects a string value for description
+      required: false
+    },
 
-    category: String,
+    category: {
+      type: String, // Expects a string value for category
+      required: false
+    },
 
-    image: String,
+    image: {
+      type: String,
+      require: false,
+    },
 
     rating: Number,
   

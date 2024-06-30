@@ -7,11 +7,6 @@ const jwt = require("jsonwebtoken");
 
 
 
-const secret = process.env.SECRET_KEY //Temporary token, do not do this in production
-
-
-
-
 // manage singin
 const signup = async (req, res) => {
   // Destructure the request body
@@ -68,6 +63,10 @@ const signin = async (req, res) => {
     const { email, password } = req.body;
     const user = await UserMod.findOne({ email: email });
 
+    // check fields for data
+    if(!email || !password ){
+      return res.status(404).json({ message: "Please Fill all details" }); 
+    }
     // check if user doesn't have an account
     if (!user) {
       return res.status(404).json({ message: "User Not Found, Please SignUp" }); //constinue from here
@@ -84,16 +83,21 @@ const signin = async (req, res) => {
     const payload = {userId: user._id} 
     
     //extracted users name for aestetics haha
-    const name = user.firstname 
+    const name = user.firstname;
+    const expiresIn = process.env.TOKEN_EXPIRY;
+    const secret = process.env.SECRET_KEY;
 
     // cooks the id + secretkey + expiration to form the token
-    const token = jwt.sign(payload, secret, {expiresIn: '1h'}); 
+    const token = jwt.sign(payload, secret, { expiresIn });
+
+    const expiryTime = Date.now() + (jwt.decode(token).exp - jwt.decode(token).iat) * 1000;
 
     res.json({
       message: `You are loged in as ${name}`, //the Aestetic*
       token: token,
       userId: user._id, // pass the userId to the frontend in response body
-      name //passed the name also incase i need it for a welcome message later.
+      name: name, //passed the name also incase i need it for a welcome message later.
+      tokenExpiry: expiryTime
   })
   } catch (error) {
     res.status(500).json({ message: error.message });

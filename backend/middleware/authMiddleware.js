@@ -4,7 +4,7 @@ const authMiddleware = (req, res, next) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader) {
-    return res.status(401).send({ error: 'Access denied. No token provided.' });
+    return res.status(401).send({ message: 'Access denied. No token provided.' });
   }
 
   const token = authHeader.split(' ')[1]; // Bearer <token>
@@ -13,10 +13,10 @@ const authMiddleware = (req, res, next) => {
     const decoded = jwt.verify(token, process.env.SECRET_KEY);
     req.user = decoded;
     // const userId = {id: decoded.id}
-    // consle.log(userId);
+    // console.log(userId);
     next();
   } catch (error) {
-    res.status(400).send({ error: 'Invalid token.' });
+    res.status(400).send({ message: 'No Authorization, Please Sign in.' });
   }
 };
 

@@ -32,21 +32,22 @@ const addCreateCart = async (req, res) => {
     res.status(200).json(populatedCart);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
-// update add product to cart --works--add product to cart
+
+// update add product to cart --works--add product to cart --reeturns populated cart
 //addtocart/:userid/:productid
 const addToCart = async (req, res) => {
   const { quantity = 1 } = req.body; // Set default quantity to 1
   const { userId, productId } = req.params;
 
   try {
-    const cart = await Cart.findOne({ userId });
+    let cart = await Cart.findOne({ userId });
 
     if (!cart) {
-      return res.status(404).json({ error: "Cart not found" });
+      return res.status(404).json({ message: "Cart not found" });
     }
 
     const productIndex = cart.products.findIndex(
@@ -54,18 +55,27 @@ const addToCart = async (req, res) => {
     );
 
     if (productIndex >= 0) {
-      cart.products[productIndex].quantity += quantity; //this ensures that product doesn't repeat in the cart list
+      cart.products[productIndex].quantity += quantity; // This ensures that the product doesn't repeat in the cart list
     } else {
       cart.products.push({ productId, quantity });
     }
-
+    
+    // Save the updated cart
     await cart.save();
-    // res.status(200).json(cart);
-    res.status(200).json({message: 'Product has been added to your cart'});
+
+    // Populate the cart with product details
+    cart = await cart.populate("products.productId");
+
+    res.status(200).json({
+      message: 'Product has been added to your cart',
+      cart
+    });
   } catch (err) {
-    res.status(500).json({ error: "Internal server error" });
+    console.error("Error adding to cart:", err);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
+
 
 // Get all carts --works -- to be used
 // /getcart
@@ -89,6 +99,7 @@ const getAllCarts = async (req, res) => {
   }
 };
 
+
 // Get a single cart by cart ID --works not sure if i'll need it
 // /getcart/:id
 const getSingleCart = async (req, res) => {
@@ -110,6 +121,7 @@ const getSingleCart = async (req, res) => {
   }
 };
 
+
 // Delete a cart --will be used to clear cart data --too harsh, wont be used for now
 // /deletecart/:id
 const deleteCart = async (req, res) => {
@@ -123,7 +135,8 @@ const deleteCart = async (req, res) => {
   }
 };
 
-// Update item quantity in a cart --to be used
+
+// Update item quantity in a cart --to be used -- returns Populateed Cart
 // //updateqty/:id
 const updateCartProductQuantity = async (req, res) => {
   try {
@@ -164,6 +177,7 @@ const updateCartProductQuantity = async (req, res) => {
   }
 };
 
+
 //update and delete product in a cart --confirmed -to be used .. ..
 // /delete/:userId/:productId
 const deleteProductFromCart = async (req, res) => {
@@ -187,6 +201,7 @@ const deleteProductFromCart = async (req, res) => {
   }
 };
 
+
 // clear cart items --to be used
 // /clearcart/:userId
 const clearCart = async (req, res) => {
@@ -208,6 +223,51 @@ const clearCart = async (req, res) => {
   }
 };
 
+
+// Sync Cart Endpoint
+// localhost:3005/sync_cart/:userId
+// const syncCart = async (req, res) => {
+//   const { userId } = req.params;
+//   const { cart: guestCart } = req.body;
+
+//   try {
+//     // Find the user's cart
+//     let userCart = await Cart.findOne({ userId }).populate('products.productId');
+
+//     if (!userCart) {
+//       // If the user does not have a cart, create a new one
+//       userCart = new Cart({ userId, products: [] });
+//     }
+
+//     // Merge guest cart items with user's cart items
+//     guestCart.forEach((guestCartItem) => {
+//       const existingItemIndex = userCart.products.findIndex(
+//         (item) => item.productId._id.toString() === guestCartItem.productId
+//       );
+
+//       if (existingItemIndex >= 0) {
+//         // If the item already exists in the user's cart, update the quantity
+//         userCart.products[existingItemIndex].quantity += guestCartItem.quantity;
+//       } else {
+//         // If the item does not exist, add it to the user's cart
+//         userCart.products.push({
+//           productId: guestCartItem.productId,
+//           quantity: guestCartItem.quantity,
+//         });
+//       }
+//     });
+
+//     // Save the updated cart
+//     await userCart.save();
+
+//     res.status(200).json({ message: 'Cart synchronized successfully', cart: userCart });
+//   } catch (error) {
+//     console.error('Error syncing cart:', error);
+//     res.status(500).json({ message: 'Internal server error' });
+//   }
+// };
+
+
 module.exports = {
   getAllCarts,
   getSingleCart,
@@ -217,4 +277,5 @@ module.exports = {
   updateCartProductQuantity,
   deleteProductFromCart,
   clearCart,
+  // syncCart,
 };

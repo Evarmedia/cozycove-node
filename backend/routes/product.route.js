@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const authMiddleware = require('../middleware/authMiddleware.js');
+const upload = require('../config/upload.js');
+
 
 
 const {
@@ -11,7 +13,7 @@ const {
     deleteProduct,
 } = require('../controller/product.controller.route.js');
 
-router.post('/', authMiddleware, createProduct);
+router.post('/', authMiddleware, upload.single('image'), createProduct);
 
 router.get('/', getProducts);
 

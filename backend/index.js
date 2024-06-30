@@ -3,6 +3,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const PORT = process.env.PORT || 3005;
 
+const multer = require('multer');
+
 //Routes
 const productRouter = require('./routes/product.route.js')
 const userRouter = require('./routes/auth.route.js');
@@ -31,18 +33,18 @@ app.get("/", (req, res) => {
 });
 
 
-//private route
-app.use(process.env.AUTH_URL, userRouter);
 
+app.use(process.env.AUTH_URL, userRouter);
 // Prvate route
 app.use(process.env.PRODUCT_URL, productRouter);
 app.use(process.env.CART_URL, authMiddleware, cartRouter);
+
 
 app.listen(PORT, (req, res) => {
     console.log(`listening on port ${PORT}`);
   });
 
-  mongoose.connect(process.env.MONGODB_URL).then(()=>{
+mongoose.connect(process.env.MONGODB_URL).then(()=>{
     console.log("Mongodb Connected!");
 }).catch(()=>{
     console.log("Failed to connect!");
